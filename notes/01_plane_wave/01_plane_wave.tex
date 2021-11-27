@@ -1,0 +1,115 @@
+% !TeX spellcheck = en_US
+\documentclass[]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{FDTD Method: Plane Wave in 1D}
+\author{A. Voss}
+
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+- go from maxwell and constitutive relations to fdtd formulation for plane wave in one equation
+
+- discuss discretization and staggered grid
+
+- discuss courant condition
+
+- outline algorithm and refer to examples
+
+- go through some examples
+\end{abstract}
+
+% TODO: Better section names
+\section{Maxwell's Equations as Groundwork}
+% TODO: Clarify why we wont look at the other two of Maxwell's equations
+As with any problem in the field of electro-magnetics we will start with \textit{Maxwell's equations}. Of interest here are only the time-varying equations, i.e. \textit{Ampere's circuital law} and \textit{Faraday's law of induction}:
+\begin{align}
+	\nabla \times \mathbf{H} &= \frac{\partial \mathbf{D}}{\partial t} + \mathbf{J} \\
+	\nabla \times \mathbf{E} &= -\frac{\partial \mathbf{B}}{\partial t} \text{ .}
+\end{align}
+It is noticeable that there are five unknown quantities to be determined (electric field \(\mathbf{E}\), magnetic induction \(\mathbf{B}\), electric displacement field \(\mathbf{D}\), magnetic field \(\mathbf{H}\) and current density \(\mathbf{J}\)) with only two equations. The missing three equations are the following \textit{constitutive} relations
+\begin{align}
+	\mathbf{D} &= \varepsilon \mathbf{E} \\
+	\mathbf{B} &= \mu \mathbf{H} \\
+	\mathbf{J} &= \sigma \mathbf{E}
+\end{align}
+that lead us to the following formulation of Maxwell's equations:
+\begin{align}
+	\nabla \times \mathbf{H} &= \varepsilon \frac{\partial \mathbf{E}}{\partial t} + \sigma \mathbf{E} \\
+	\nabla \times \mathbf{E} &= -\mu \frac{\partial \mathbf{H}}{\partial t} \text{ .}
+\end{align}
+% TODO: Describe permittivity and permeability
+After unfurling the curl operations we get to the following system of six equations
+\begin{align}
+	\partial_y E_z - \partial_z E_y &= -\mu \partial_t B_x \\
+	\partial_z E_x - \partial_x E_z &= -\mu \partial_t B_y \\
+	\partial_x E_y - \partial_y E_x &= -\mu \partial_t B_z \\
+	\partial_y H_z - \partial_z H_y &= \varepsilon \partial_t E_x + \sigma E_x \\
+	\partial_z H_x - \partial_x H_z &= \varepsilon \partial_t E_y + \sigma E_y \\
+	\partial_x H_y - \partial_y H_x &= \varepsilon \partial_t E_z + \sigma E_z
+\end{align}
+that will function as basis for any of the following discretizations. Note that \(\partial_x\) is a shorthand for the partial derivation operator \(\frac{\partial}{\partial x}\).
+
+\section{Plane Wave as First Example}
+To gain an understanding of the \textit{FDTD} (finite-difference time-domain) method, we will work through progressively harder examples starting from a simple one-dimensional plane wave in free space. The electric and magnetic field are perpendicular to the direction of propagation in a plane wave, a property known as \textit{TEM} (transverse electro-magnetic).
+% TODO: Image for demonstration
+
+If we pick the \(z\)-axis as direction of propagation and assume a linear polarization of the electric field in the direction of the \(x\)-axis, we can strike any component of the electric field in the \(y,z\)-axis as well as the perpendicular magnetic field in the \(x,z\)-axis. Furthermore, any spatial derivative in another direction than the \(z\)-axis can be discarded and since we're looking at a wave in free space, the conductivity \( \sigma \) is null.
+
+% TODO: Reference
+Finally, the large system above can be reduced to just two equations
+\begin{align}
+	-\partial_z H_y &= \varepsilon \partial_t E_x \\
+	\partial_z E_x  &= -\mu \partial_t B_y
+\end{align}
+which will be discretized in a staggered manner in both space and time by using a finite difference (e.g. central-difference approximation)
+% TODO: Reference the approximation
+to obtain the discrete equations
+\begin{align}
+	-\frac{H_y^{n}(k+1/2) - H_y^n(k-1/2)}{\Delta z} &= \varepsilon \frac{E_x^{n+1/2}(k)-E_x^{n-1/2}(k)}{\Delta t} \\
+	\frac{E_x^{n+1/2}(k+1)-E_x^{n+1/2}(k)}{\Delta z}  &= -\mu \frac{H_y^{n+1}(k+1/2)-H_y^{n}(k+1/2)}{\Delta t}
+\end{align}
+where the superscript gives the instant in time \( t = \Delta t \cdot n \) and the function parameter gives the position in the grid \( z = \Delta z \cdot k \). Notice that the calculation of the electric and magnetic field is interleaved in a similar way as you would think about the propagation of an electro-magnetic wave, where a time-varying electric field causes a time-varying magnetic field which again causes a time-varying electric field and so on.
+
+The calculation here will therefore proceed as such: (1) determine the electric field at instant \( n+1/2 \), (2) with that determine the magnetic field at instant \( n+1 \), and so on. The spatial grid is also interleaved between electric and magnetic field but the underlying reasoning will be left to the 3D-formulation, where it can be more easily grasped visually.
+
+Let's rearrange to clarify this approach:
+\begin{align}
+	E_x^{n+1/2}(k) &= E_x^{n-1/2}(k) - \frac{\Delta t}{\varepsilon \Delta z}\left( H_y^n(k+1/2) - H_y^n(k-1/2) \right) \\
+	H_y^{n+1}(k+1/2) &= H_y^n(k+1/2) - \frac{\Delta t}{\mu \Delta z}\left( E_x^{n+1/2}(k+1) - E_x^{n+1/2}(k) \right) \text{ .}
+\end{align}
+% TODO: Reference
+It can be seen that the first equation only depends on field values of the past and that the second equation only depends on the result of the first equation and field values of the past.
+
+The time step \( \Delta t \) is chosen to fulfill the \textit{CFL} (Courant-Friedrichs-Lewy) condition
+\begin{equation}
+	c \frac{\Delta t}{\Delta z} \leq 1
+\end{equation}
+which in our case leads to a maximum time step of
+\begin{equation}
+	\Delta t = \frac{\Delta z}{c}
+\end{equation}
+where \( c \) is the speed of light. This essentially guarantees that a wave can not pass more than one interval of size \( \Delta z \) in a single time step \( \Delta t \).
+
+% TODO: Reference
+Insertion into the relevant part of equations [REF] yields:
+\begin{align}
+	\frac{\Delta t}{\varepsilon \Delta z} &= \frac{1}{c \cdot \varepsilon} = \sqrt{\frac{\mu_0}{\varepsilon_0}} \frac{1}{\varepsilon_r} = \frac{Z_0}{\varepsilon_r} \\
+	\frac{\Delta t}{\mu \Delta z} &= \frac{1}{c \cdot \mu} = \sqrt{\frac{\varepsilon_0}{\mu_0}} \frac{1}{\mu_r} = \frac{1}{Z_0 \mu_r}
+\end{align}
+where \( Z_0 \approx 376.73 \Omega \) refers to the impedance of free space.
+
+\section{Simulations}
+Now we just have to set up a grid of values for permittivity and permeability and one or more sources and we can start doing some examples.
+
+% TODO: do a new section here, and one above
+
+\end{document}          

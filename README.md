@@ -5,7 +5,7 @@ A collection of notes I'm assembling in preparation for a 3D EM simulation softw
 The following are the application notes that have to be written in preparation for developing a electromagnetics-simulation software. They are split into absolutely essential for any simulations and extensions (extensions are probably wishful-thinking, essentials are already more than a handful of work).
 
 ### Essential
-- [ ] FDTD for 1D/2D/3D
+- [ ] FDTD for plane wave, full 1D, full 3D
 - [ ] Building the grid
 - [ ] Lumped elements (e.g. voltage/current source, RLC, diode)
 
