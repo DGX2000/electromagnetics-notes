@@ -1,6 +1,12 @@
 # Notes on Computational Electromagnetics
 A collection of notes I'm assembling in preparation for a 3D EM simulation software suite. Since it is the most simple to implement I will focus on the FDTD method. Furthermore, an extension for phased array antennas is placed that is based on the Huygens-Fresnel principle and should utilize the radiation pattern of a single antenna. Maybe, spherical lenses for the higher frequencies will be handled to.
 
+## Notes (In Progress)
+
+[FDTD Method: Plane Wave in 1D](/notes/01_plane_wave/01_plane_wave.pdf)
+
+## Notes (Finished)
+
 ## Roadmap
 The following are the application notes that have to be written in preparation for developing a electromagnetics-simulation software. They are split into absolutely essential for any simulations and extensions (extensions are probably wishful-thinking, essentials are already more than a handful of work).
 
