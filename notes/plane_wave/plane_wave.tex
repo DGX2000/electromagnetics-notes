@@ -8,25 +8,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 
-\title{FDTD Method: Plane Wave in 1D}
-\author{A. Voss}
-
-
 \begin{document}
-
-\maketitle
-\begin{abstract}
-- go from maxwell and constitutive relations to fdtd formulation for plane wave in one equation
-
-- discuss discretization and staggered grid
-
-- discuss courant condition
-
-- outline algorithm and refer to examples
-
-- go through some examples
-\end{abstract}
-
 % TODO: Better section names
 \section{Maxwell's Equations as Groundwork}
 % TODO: Clarify why we wont look at the other two of Maxwell's equations
@@ -49,9 +31,9 @@ that lead us to the following formulation of Maxwell's equations:
 % TODO: Describe permittivity and permeability
 After unfurling the curl operations we get to the following system of six equations
 \begin{align}
-	\partial_y E_z - \partial_z E_y &= -\mu \partial_t B_x \\
-	\partial_z E_x - \partial_x E_z &= -\mu \partial_t B_y \\
-	\partial_x E_y - \partial_y E_x &= -\mu \partial_t B_z \\
+	\partial_y E_z - \partial_z E_y &= -\mu \partial_t H_x \\
+	\partial_z E_x - \partial_x E_z &= -\mu \partial_t H_y \\
+	\partial_x E_y - \partial_y E_x &= -\mu \partial_t H_z \\
 	\partial_y H_z - \partial_z H_y &= \varepsilon \partial_t E_x + \sigma E_x \\
 	\partial_z H_x - \partial_x H_z &= \varepsilon \partial_t E_y + \sigma E_y \\
 	\partial_x H_y - \partial_y H_x &= \varepsilon \partial_t E_z + \sigma E_z
@@ -68,7 +50,7 @@ If we pick the \(z\)-axis as direction of propagation and assume a linear polari
 Finally, the large system above can be reduced to just two equations
 \begin{align}
 	-\partial_z H_y &= \varepsilon \partial_t E_x \\
-	\partial_z E_x  &= -\mu \partial_t B_y
+	\partial_z E_x  &= -\mu \partial_t H_y
 \end{align}
 which will be discretized in a staggered manner in both space and time by using a finite difference (e.g. central-difference approximation)
 % TODO: Reference the approximation

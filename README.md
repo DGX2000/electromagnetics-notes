@@ -3,7 +3,7 @@ A collection of notes I'm assembling in preparation for a 3D EM simulation softw
 
 ## Notes (In Progress)
 
-[FDTD Method: Plane Wave in 1D](/notes/01_plane_wave/01_plane_wave.pdf)
+[FDTD Method: Plane Wave in 1D](/notes/plane_wave/plane_wave.pdf)
 
 ## Notes (Finished)
 
