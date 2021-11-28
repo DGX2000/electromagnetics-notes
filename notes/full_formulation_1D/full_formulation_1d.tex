@@ -1,0 +1,28 @@
+% !TeX spellcheck = en_US
+\documentclass[]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section{Deriving FDTD method for one dimension}
+After unfurling the curl operations we get to the following system of six equations
+\begin{align}
+	\partial_y E_z - \partial_z E_y &= -\mu \partial_t H_x \\
+	\partial_z E_x - \partial_x E_z &= -\mu \partial_t H_y \\
+	\partial_x E_y - \partial_y E_x &= -\mu \partial_t H_z \\
+	\partial_y H_z - \partial_z H_y &= \varepsilon \partial_t E_x + \sigma E_x \\
+	\partial_z H_x - \partial_x H_z &= \varepsilon \partial_t E_y + \sigma E_y \\
+	\partial_x H_y - \partial_y H_x &= \varepsilon \partial_t E_z + \sigma E_z
+\end{align}
+that will function as basis for any of the following discretizations. Note that \(\partial_x\) is a shorthand for the partial derivation operator \(\frac{\partial}{\partial x}\).
+
+\section{Simulations}
+
+
+\end{document}          
