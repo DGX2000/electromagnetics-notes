@@ -10,15 +10,20 @@
 
 \begin{document}
 
-\section{Array antennas}
+\section{Array Antennas}
 % TODO: a lot of references to Balanis
 % TODO: equation
 - radiation characteristic for array antenna can be determined from rad characteristic of a singular element and the array factor
+\begin{equation}
+	S_{Array}(\theta, \phi) = S_{Element}(\theta, \phi) \cdot AF(\theta, \phi)
+\end{equation}
 
 - array factor is determined by treating every source of radiation in the array as in isotropic radiator and adding them (superposition for fields holds in linear media, e.g. free space)
 
 - example: uniform linear array of N elements
-% TODO: equation
+\begin{equation}
+	AF(\theta) = \sum_{n=0}^{N-1}\exp(jnkd\cos\theta)
+\end{equation}
 
 - k = wavenumber (explain), d = inter-element distance, no dependence along phi as its only 1D
 % TODO: add some plots
@@ -29,17 +34,31 @@
 
 - if moving targets, precise alignment by mechanically orientating antennas bothersome, therefore techniques for beam-forming and beam-steering
 
-\section{Beam-forming and beam-steering}
+\section{Beamforming and Beamsteering}
 
 - explain beam-forming
 
 - e.g. beam-steering is done for a phased array with a progressive phase
 
+- upper element has to be this earlier in time
+\begin{equation}
+	t = \frac{s}{v_{ph}}
+\end{equation}
+
+- this equals a phase shift of
+\begin{equation}
+	\Delta \phi = k t v_{ph} = k s = k d\sin\alpha
+\end{equation}
+
 - illustration for the process in one dimension
 
 - result for array factor in one dimension as plot
 
-- this can be extended to two extensions
+- this can be extended to two extensions and NxM elements
+\begin{equation}
+	\phi(m,n) = k\sin\theta(md_x\cos\phi + nd_y\sin\phi)
+\end{equation}
+- dx, dy refer to inter-element distances in their respective axes
 
 - plot of result for two dimensions
 
@@ -61,11 +80,17 @@
 
 \subsection{Optical}
 
-- lenses, change optical path length by refractive index; quite constant across frequency (non-dispersive), therefore don't limit bandwidth, but introduce losses, also consider matching and therefore reflections
+- lenses, change optical path length by refractive index; quite constant across frequency (non-dispersive), therefore don't limit bandwidth, but introduce losses, also consider matching (easier with silicon lenses) and therefore reflections
+\begin{equation}
+	\phi(l) = knl
+\end{equation}
+- refractive index, length through medium of refractive index
 
 - describe the losses
 
 - extended hemispherical lens (shape of a bullet) puts antenna at focus, cause almost planar wavefronts and therefore high directivity
+
+- do the same for a parabolic reflector
 
 \subsection{Combined}
 
