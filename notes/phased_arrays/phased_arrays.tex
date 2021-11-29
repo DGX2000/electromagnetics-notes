@@ -11,15 +11,64 @@
 \begin{document}
 
 \section{Array antennas}
+% TODO: a lot of references to Balanis
+% TODO: equation
+- radiation characteristic for array antenna can be determined from rad characteristic of a singular element and the array factor
+
+- array factor is determined by treating every source of radiation in the array as in isotropic radiator and adding them (superposition for fields holds in linear media, e.g. free space)
+
+- example: uniform linear array of N elements
+% TODO: equation
+
+- k = wavenumber (explain), d = inter-element distance, no dependence along phi as its only 1D
+% TODO: add some plots
+
+- inter-element distance is chosen as smaller than wavelength lambda to avoid grating lobes, but has to be large enough to avoid physical overlap and near-field mutual coupling
+
+- from plot, we see that array increases directivity strongly, but high directivity also requires precise alignment between transmitter and receiver
+
+- if moving targets, precise alignment by mechanically orientating antennas bothersome, therefore techniques for beam-forming and beam-steering
 
 \section{Beam-forming and beam-steering}
 
+- explain beam-forming
+
+- e.g. beam-steering is done for a phased array with a progressive phase
+
+- illustration for the process in one dimension
+
+- result for array factor in one dimension as plot
+
+- this can be extended to two extensions
+
+- plot of result for two dimensions
+
+- add profile for focusing the beam (e.g. bessel-beam, Gaussian beam?)
+
+- how to achieve the phase shifts?
+
 \section{Implementation}
+
+- in the following:
+
+- before radiation is emitted, electrical phase shifting
+
+- after radiation is emitted, optics (e.g. lenses / reflectors)
+
+- combination of both
 
 \subsection{Electrical}
 
 \subsection{Optical}
 
+- lenses, change optical path length by refractive index; quite constant across frequency (non-dispersive), therefore don't limit bandwidth, but introduce losses, also consider matching and therefore reflections
+
+- describe the losses
+
+- extended hemispherical lens (shape of a bullet) puts antenna at focus, cause almost planar wavefronts and therefore high directivity
+
 \subsection{Combined}
+
+- include this?
 
 \end{document}          

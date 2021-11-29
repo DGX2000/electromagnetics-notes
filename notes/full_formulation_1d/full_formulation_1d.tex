@@ -10,8 +10,9 @@
 
 \begin{document}
 
-\section{Deriving FDTD method for one dimension}
-After unfurling the curl operations we get to the following system of six equations
+\section{Full FDTD for the 1D Case}
+% TODO: Reference to that
+- starting from six equations from maxwell from other note on plane waves
 \begin{align}
 	\partial_y E_z - \partial_z E_y &= -\mu \partial_t H_x \\
 	\partial_z E_x - \partial_x E_z &= -\mu \partial_t H_y \\
@@ -20,7 +21,58 @@ After unfurling the curl operations we get to the following system of six equati
 	\partial_z H_x - \partial_x H_z &= \varepsilon \partial_t E_y + \sigma E_y \\
 	\partial_x H_y - \partial_y H_x &= \varepsilon \partial_t E_z + \sigma E_z
 \end{align}
-that will function as basis for any of the following discretizations. Note that \(\partial_x\) is a shorthand for the partial derivation operator \(\frac{\partial}{\partial x}\).
+- partial x refers to partial derivation
+
+- only consider discretization along one axis, here z-axis so any derivative along another axis
+can be ignored
+
+- this gives the following six equations
+\begin{align}
+	\partial_z E_y &= \mu \partial_t H_x \\
+	\partial_z E_x &= -\mu \partial_t H_y \\
+	0 &= -\mu \partial_t H_z \\
+	- \partial_z H_y &= \varepsilon \partial_t E_x + \sigma E_x \\
+	\partial_z H_x  &= \varepsilon \partial_t E_y + \sigma E_y \\
+	0 &= \varepsilon \partial_t E_z + \sigma E_z
+\end{align}
+
+% TODO: Add mention of Yee grid to plane wave note
+- again discretize spatially and temporally in a staggered manner (Yee-grid)
+- we can drop eqn 3. and 6, as they just state that there is no change
+% TODO: Write down equations for that
+\begin{align}
+	\frac{E_y^{n+1/2}(k+1)-E_y^{n+1/2}(k)}{\Delta z} &= \mu \frac{H_x^{n+1}(k+1/2)-H_x^{n}(k+1/2)}{\Delta t} \\
+	\frac{E_x^{n+1/2}(k+1)-E_x^{n+1/2}(k)}{\Delta z} &= -\mu \frac{H_y^{n+1}(k+1/2)-H_y^{n}(k+1/2)}{\Delta t} \\
+	-\frac{H_y^{n}(k+1/2)-H_y^{n}(k-1/2)}{\Delta z} &= \varepsilon \frac{E_x^{n+1/2}(k)-E_x^{n-1/2}(k)}{\Delta t} + \sigma E_x^n(k) \\
+	\frac{H_x^{n}(k+1/2)-H_x^{n}(k-1/2)}{\Delta z} &= \varepsilon \frac{E_y^{n+1/2}(k)-E_y^{n-1/2}(k)}{\Delta t} + \sigma E_y^n(k)
+\end{align}
+
+- new unknown variable, we can get that as simple average between two time steps, e.g.
+\begin{equation}
+	E_x^n(k) = \frac{E_x^{n+1/2}(k)-E_x^{n-1/2}(k)}{2}
+\end{equation}
+
+- no we get recurrence relations for the algorithm by multiplying out and then rearranging
+\begin{align}
+	H_x^{n+1}(k+1/2) &= H_x^{n}(k+1/2) + \frac{\Delta t}{\mu \Delta z}\left( E_y^{n+1/2}(k+1)-E_y^{n+1/2}(k) \right) \\
+	H_y^{n+1}(k+1/2) &= H_y^{n}(k+1/2) - \frac{\Delta t}{\mu \Delta z}\left( E_x^{n+1/2}(k+1)-E_x^{n+1/2}(k) \right) \\
+	E_x^{n+1/2}(k) &= E_x^{n-1/2}(k) - \frac{\Delta t}{\varepsilon \Delta z + \frac{1}{2}\sigma \Delta z \Delta t} \left( H_y^{n}(k+1/2)-H_y^{n}(k-1/2) \right) \\
+	E_y^{n+1/2}(k) &= E_y^{n-1/2}(k) + \frac{\Delta t}{\varepsilon \Delta z + \frac{1}{2}\sigma \Delta z \Delta t} \left( H_x^{n}(k+1/2)-H_x^{n}(k-1/2) \right)
+\end{align}
+- in algorithm, first calculate 20/21, then 18/19
+
+- again CFL condition for the time step
+\begin{equation}
+	\Delta t \leq \frac{\Delta z}{c}
+\end{equation}
+
+- for 18/19 term, we get
+\begin{align}
+	\frac{\Delta t}{\mu \Delta z} &= \frac{1}{Z_0 \mu_r} \\
+	\frac{\Delta t}{\varepsilon \Delta z + \frac{1}{2}\sigma \Delta z \Delta t} &= \frac{\frac{\Delta z}{c}}{\varepsilon \Delta z + \frac{1}{2}\sigma \Delta z \frac{\Delta z}{c}} = \frac{Z_0}{\varepsilon_r + \frac{1}{2} Z_0 \sigma \Delta z}
+\end{align}
+% TODO: equation
+
 
 \section{Simulations}
 
