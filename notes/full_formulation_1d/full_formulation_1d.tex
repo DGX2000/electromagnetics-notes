@@ -12,66 +12,59 @@
 
 \section{Full FDTD for the 1D Case}
 % TODO: Reference to that
-- starting from six equations from maxwell from other note on plane waves
+We're starting with the previously [REF] derived six equations that stem from Maxwell. They're listed here again for convenience:
 \begin{align}
 	\partial_y E_z - \partial_z E_y &= -\mu \partial_t H_x \\
 	\partial_z E_x - \partial_x E_z &= -\mu \partial_t H_y \\
 	\partial_x E_y - \partial_y E_x &= -\mu \partial_t H_z \\
 	\partial_y H_z - \partial_z H_y &= \varepsilon \partial_t E_x + \sigma E_x \\
 	\partial_z H_x - \partial_x H_z &= \varepsilon \partial_t E_y + \sigma E_y \\
-	\partial_x H_y - \partial_y H_x &= \varepsilon \partial_t E_z + \sigma E_z
+	\partial_x H_y - \partial_y H_x &= \varepsilon \partial_t E_z + \sigma E_z \text{ .}
 \end{align}
-- partial x refers to partial derivation
+The operator \( \partial_x \) is a shorthand for the partial derivative \( \frac{\partial}{\partial x} \).
 
-- only consider discretization along one axis, here z-axis so any derivative along another axis
-can be ignored
-
-- this gives the following six equations
+Again, we're only considering a discretization along one axis (\textit{z-axis}), but now we won't force the conditions a plane wave. Thus spatial derivatives along other axes (\textit{x-axis} and \textit{y-axis}) will be disregarded, but the electric and magnetic field will not be constricted to a single axis. This reasoning leads to the following modified equations:
 \begin{align}
 	\partial_z E_y &= \mu \partial_t H_x \\
 	\partial_z E_x &= -\mu \partial_t H_y \\
 	0 &= -\mu \partial_t H_z \\
 	- \partial_z H_y &= \varepsilon \partial_t E_x + \sigma E_x \\
 	\partial_z H_x  &= \varepsilon \partial_t E_y + \sigma E_y \\
-	0 &= \varepsilon \partial_t E_z + \sigma E_z
+	0 &= \varepsilon \partial_t E_z + \sigma E_z \text{ .}
 \end{align}
-
+Note that equations 3 and 6 [REF] can be dropped, since they only state that there is time-variance in the electric and magnetic field along the z-axis. The discretization is done in a staggered manner (\textit{Yee-grid}) as in the case of the plane wave and leads to the equations
 % TODO: Add mention of Yee grid to plane wave note
-- again discretize spatially and temporally in a staggered manner (Yee-grid)
-- we can drop eqn 3. and 6, as they just state that there is no change
-% TODO: Write down equations for that
 \begin{align}
-	\frac{E_y^{n+1/2}(k+1)-E_y^{n+1/2}(k)}{\Delta z} &= \mu \frac{H_x^{n+1}(k+1/2)-H_x^{n}(k+1/2)}{\Delta t} \\
-	\frac{E_x^{n+1/2}(k+1)-E_x^{n+1/2}(k)}{\Delta z} &= -\mu \frac{H_y^{n+1}(k+1/2)-H_y^{n}(k+1/2)}{\Delta t} \\
-	-\frac{H_y^{n}(k+1/2)-H_y^{n}(k-1/2)}{\Delta z} &= \varepsilon \frac{E_x^{n+1/2}(k)-E_x^{n-1/2}(k)}{\Delta t} + \sigma E_x^n(k) \\
-	\frac{H_x^{n}(k+1/2)-H_x^{n}(k-1/2)}{\Delta z} &= \varepsilon \frac{E_y^{n+1/2}(k)-E_y^{n-1/2}(k)}{\Delta t} + \sigma E_y^n(k)
+	\frac{E_y^{n+1/2}(k+1)-E_y^{n+1/2}(k)}{\Delta z} &= \mu \frac{H_x^{n+1}(k+1/2)-H_x^{n}(k+1/2)}{\Delta t} \text{ ,} \\
+	\frac{E_x^{n+1/2}(k+1)-E_x^{n+1/2}(k)}{\Delta z} &= -\mu \frac{H_y^{n+1}(k+1/2)-H_y^{n}(k+1/2)}{\Delta t} \text{ ,} \\
+	-\frac{H_y^{n}(k+1/2)-H_y^{n}(k-1/2)}{\Delta z} &= \varepsilon \frac{E_x^{n+1/2}(k)-E_x^{n-1/2}(k)}{\Delta t} + \sigma E_x^n(k) \text{ ,} \\
+	\frac{H_x^{n}(k+1/2)-H_x^{n}(k-1/2)}{\Delta z} &= \varepsilon \frac{E_y^{n+1/2}(k)-E_y^{n-1/2}(k)}{\Delta t} + \sigma E_y^n(k) \text{ ,}
 \end{align}
-
-- new unknown variable, we can get that as simple average between two time steps, e.g.
+where a new unknown variable \( E_x^n(k) \) appears -- originally -- due to the contribution of the current density term in Ampere's circuital law [REF]. This new unknown variable can be eliminated by averaging between two time steps as in 
+% TODO: Ref
 \begin{equation}
-	E_x^n(k) = \frac{E_x^{n+1/2}(k)-E_x^{n-1/2}(k)}{2}
+	E_x^n(k) = \frac{E_x^{n+1/2}(k)-E_x^{n-1/2}(k)}{2} \text{ .}
 \end{equation}
 
-- no we get recurrence relations for the algorithm by multiplying out and then rearranging
+Rearranging gives the iterative algorithm:
 \begin{align}
 	H_x^{n+1}(k+1/2) &= H_x^{n}(k+1/2) + \frac{\Delta t}{\mu \Delta z}\left( E_y^{n+1/2}(k+1)-E_y^{n+1/2}(k) \right) \\
 	H_y^{n+1}(k+1/2) &= H_y^{n}(k+1/2) - \frac{\Delta t}{\mu \Delta z}\left( E_x^{n+1/2}(k+1)-E_x^{n+1/2}(k) \right) \\
 	E_x^{n+1/2}(k) &= E_x^{n-1/2}(k) - \frac{\Delta t}{\varepsilon \Delta z + \frac{1}{2}\sigma \Delta z \Delta t} \left( H_y^{n}(k+1/2)-H_y^{n}(k-1/2) \right) \\
-	E_y^{n+1/2}(k) &= E_y^{n-1/2}(k) + \frac{\Delta t}{\varepsilon \Delta z + \frac{1}{2}\sigma \Delta z \Delta t} \left( H_x^{n}(k+1/2)-H_x^{n}(k-1/2) \right)
+	E_y^{n+1/2}(k) &= E_y^{n-1/2}(k) + \frac{\Delta t}{\varepsilon \Delta z + \frac{1}{2}\sigma \Delta z \Delta t} \left( H_x^{n}(k+1/2)-H_x^{n}(k-1/2) \right) \text{ .}
 \end{align}
-- in algorithm, first calculate 20/21, then 18/19
-
-- again CFL condition for the time step
+% TODO: Refs
+In each time step, first [20] and [21] are determined for the electric field, then the magnetic field is determined with [18] and [19]. For numerical stability, the CFL condition
 \begin{equation}
 	\Delta t \leq \frac{\Delta z}{c}
 \end{equation}
-
-- for 18/19 term, we get
+has to also be fulfilled. For this case we arrive at the following factors
 \begin{align}
 	\frac{\Delta t}{\mu \Delta z} &= \frac{1}{Z_0 \mu_r} \\
 	\frac{\Delta t}{\varepsilon \Delta z + \frac{1}{2}\sigma \Delta z \Delta t} &= \frac{\frac{\Delta z}{c}}{\varepsilon \Delta z + \frac{1}{2}\sigma \Delta z \frac{\Delta z}{c}} = \frac{Z_0}{\varepsilon_r + \frac{1}{2} Z_0 \sigma \Delta z}
 \end{align}
-% TODO: equation
+for the spatial derivative terms in 18-21.
+% TODO: Refs
 
 
 \section{Simulations}
