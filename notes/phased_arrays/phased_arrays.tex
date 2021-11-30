@@ -12,33 +12,26 @@
 
 \section{Array Antennas}
 % TODO: a lot of references to Balanis
-% TODO: equation
-- radiation characteristic for array antenna can be determined from rad characteristic of a singular element and the array factor
+The radiation characteristic of a complete array antenna is determined from the radiation characteristic of a singular element and the array factor:
 \begin{equation}
-	S_{Array}(\theta, \phi) = S_{Element}(\theta, \phi) \cdot AF(\theta, \phi)
+	S_{Array}(\theta, \phi) = S_{Element}(\theta, \phi) \cdot AF(\theta, \phi) \text{ .}
 \end{equation}
+The array factor can be determined by treating every source of radiation in the array as an isotropic radiator and summing their effects as the principle of superposition holds in linear media (e.g. free space).
 
-- array factor is determined by treating every source of radiation in the array as in isotropic radiator and adding them (superposition for fields holds in linear media, e.g. free space)
-
-- example: uniform linear array of N elements
+As an example, the array factor for an uniform linear array antenna of N elements is determined to be 
 \begin{equation}
-	AF(\theta) = \sum_{n=0}^{N-1}\exp(jnkd\cos\theta)
+	AF(\theta) = \sum_{n=0}^{N-1}\exp(inkd\cos\theta)
 \end{equation}
+where \( k \) refers to the wavenumber (spatial frequency of the wave) and \( d \) refers to the inter-element distance. Wavenumbers can contain an imaginary part to model attenuation, but this won't be considered here. The inter-element distance is chosen to be smaller than the wavelength \( \lambda \) to avoid grating lobes [REF] but great enough to avoid physical overlap and mutual coupling in the near-field.
+% TODO: Ref to balanis
+% TODO: Add a plot
 
-- k = wavenumber (explain), d = inter-element distance, no dependence along phi as its only 1D
-% TODO: add some plots
-
-- inter-element distance is chosen as smaller than wavelength lambda to avoid grating lobes, but has to be large enough to avoid physical overlap and near-field mutual coupling
-
-- from plot, we see that array increases directivity strongly, but high directivity also requires precise alignment between transmitter and receiver
-
-- if moving targets, precise alignment by mechanically orientating antennas bothersome, therefore techniques for beam-forming and beam-steering
+From the plot [REF, ADD PLOT] it can be seen that an array antenna is useful for achieving an increase in directivity as at point [...] all individual antennas constructively interfere. Highly directive antennas, however, require precise alignment between the transmitter and receiver. Furthermore, if either the transmitter or the receiver is moving, alignment by mechanically orientating antennas becomes too slow and bothersome, therefore techniques for forming and/or steering the beams through other means are interesting.
 
 \section{Beamforming and Beamsteering}
 
-- explain beam-forming
+The term beamforming will be used to denote the overarching category of techniques that dynamically change the radiation characteristic of an antenna. In this category the technique of beamsteering is very prominent. Beamsteering has the goal of concentrating the maximum directivity of the antenna towards a chosen target.
 
-- e.g. beam-steering is done for a phased array with a progressive phase
 
 - upper element has to be this earlier in time
 \begin{equation}
