@@ -5,7 +5,9 @@ A collection of notes I'm assembling in preparation for a 3D EM simulation softw
 
 1. [FDTD Method: Plane Wave in 1D](/notes/plane_wave/plane_wave.pdf)  
 2. [FDTD Method: Full Formulation in 1D](/notes/full_formulation_1d/full_formulation_1d.pdf)  
-3. [Phased Arrays](/notes/phased_arrays/phased_arrays.pdf)  
+3. [FDTD Method: Full Formulation in 3D](/notes/full_formulation_3d/full_formulation_3d.pdf)  
+4. [Building the Grid](/notes/building_the_grid/building_the_grid.pdf)  
+5. [Phased Arrays](/notes/phased_arrays/phased_arrays.pdf)  
 
 ## Notes (Finished)
 
